@@ -1,11 +1,11 @@
-# homebridge-mqtt-power-consumption
+# homebridge-mqtt-power-meter
 An homebridge plugin that create an HomeKit power consumption accessory mapped on MQTT topics.
 
 # Installation
 Follow the instruction in [homebridge](https://www.npmjs.com/package/homebridge) for the homebridge server installation.
-The plugin is published through [NPM](https://www.npmjs.com/package/homebridge-mqtt-power-consumption) and should be installed "globally" by typing:
+The plugin is published through [NPM](https://www.npmjs.com/package/homebridge-mqtt-power-meter) and should be installed "globally" by typing:
 
-    npm install -g homebridge-mqtt-power-consumption
+    npm install -g homebridge-mqtt-power-meter
 
 # Configuration
 Remember to configure the plugin in config.json in your home directory inside the .homebridge directory. Configuration parameters:
@@ -17,8 +17,9 @@ Remember to configure the plugin in config.json in your home directory inside th
   "username": "<username>",
   "password": "<password>",
   "topics": {
-    "power": "<topic to get the current power consumption>"
-    "totalPower": "<topic to get the total power consumption>"
+    "volts": "<topic to get the volts power >",
+    "amps": "<topic to get the amps power>",
+    "watts": "<topic to get the watts power>"
   }
 }
 ```
