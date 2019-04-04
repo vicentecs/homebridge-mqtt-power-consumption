@@ -125,18 +125,18 @@ function MqttPowerMeterAccessory(log, config) {
     this.client.subscribe(self.topics['amps']);
 }
 
-MqttPowerConsumptionAccessory.prototype.getVoltsConsumption = function (callback) {
+MqttPowerMeterAccessory.prototype.getVoltsConsumption = function (callback) {
     callback(null, this.voltsConsumption);
 };
 
-MqttPowerConsumptionAccessory.prototype.getWattsConsumption = function (callback) {
+MqttPowerMeterAccessory.prototype.getWattsConsumption = function (callback) {
     callback(null, this.wattsConsumption);
 };
 
-MqttPowerConsumptionAccessory.prototype.getAmpsConsumption = function (callback) {
+MqttPowerMeterAccessory.prototype.getAmpsConsumption = function (callback) {
     callback(null, this.ampsConsumption);
 };
 
-MqttPowerConsumptionAccessory.prototype.getServices = function () {
+MqttPowerMeterAccessory.prototype.getServices = function () {
     return [this.service];
 };

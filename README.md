@@ -11,15 +11,15 @@ The plugin is published through [NPM](https://www.npmjs.com/package/homebridge-m
 Remember to configure the plugin in config.json in your home directory inside the .homebridge directory. Configuration parameters:
 ```javascript
 {
-  "accessory": "mqtt-power-consumption",
-  "name": "<name of the power-consumption>",
+  "accessory": "mqtt-power-meter",
+  "name": "<name of the power-meter>",
   "url": "<url of the broker>", // i.e. "http://mosquitto.org:1883"
   "username": "<username>",
   "password": "<password>",
   "topics": {
     "volts": "<topic to get the volts power >",
-    "watts": "<topic to get the watts power>",
-    "amps": "<topic to get the amps power>"
+    "amps": "<topic to get the amps power>",
+    "watts": "<topic to get the watts power>"
   }
 }
 ```
