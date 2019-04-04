@@ -35,8 +35,8 @@ function MqttPowerMeterAccessory(log, config) {
     };
 
     this.voltsConsumption = 0;
-    this.wattsConsumption = 0;
     this.ampsConsumption = 0;
+    this.wattsConsumption = 0;
     this.topics = config['topics'];
 
     var EveVoltsConsumption = function() {
@@ -51,21 +51,7 @@ function MqttPowerMeterAccessory(log, config) {
         });
         this.value = this.getDefaultValue();
     };
-    inherits(EvePowerConsumption, Characteristic);
-
-    var EveWattsConsumption = function() {
-        Characteristic.call(this, 'Watts', 'EAF81118-0168-4B42-BC90-3DA56902DC5B');
-        this.setProps({
-            format: Characteristic.Formats.UINT16,
-            unit: 'watts',
-            maxValue: 10000,
-            minValue: 0,
-            minStep: 1,
-            perms: [Characteristic.Perms.READ, Characteristic.Perms.NOTIFY]
-        });
-        this.value = this.getDefaultValue();
-    };
-    inherits(EvePowerConsumption, Characteristic);
+    inherits(EveVoltsConsumption, Characteristic);
 
     var EveAmpsConsumption = function() {
         Characteristic.call(this, 'Amps', 'E99525EC-E068-408F-9F6F-75BC4141F520');
@@ -81,19 +67,33 @@ function MqttPowerMeterAccessory(log, config) {
     };
     inherits(EveAmpsConsumption, Characteristic);
 
+    var EveWattsConsumption = function() {
+        Characteristic.call(this, 'Watts', 'EAF81118-0168-4B42-BC90-3DA56902DC5B');
+        this.setProps({
+            format: Characteristic.Formats.UINT16,
+            unit: 'watts',
+            maxValue: 10000,
+            minValue: 0,
+            minStep: 1,
+            perms: [Characteristic.Perms.READ, Characteristic.Perms.NOTIFY]
+        });
+        this.value = this.getDefaultValue();
+    };
+    inherits(EveWattsConsumption, Characteristic);
+
     var PowerMeterService = function(displayName, subtype) {
         Service.call(this, displayName, '00000001-0000-1777-8000-775D67EC4377', subtype);
-        this.addCharacteristic(EveVoltConsumption);
-        this.addOptionalCharacteristic(EveWattsConsumption);
+        this.addCharacteristic(EveVoltsConsumption);
         this.addOptionalCharacteristic(EveAmpsConsumption);
+        this.addOptionalCharacteristic(EveWattsConsumption);
     };
 
     inherits(PowerMeterService, Service);
 
     this.service = new PowerMeterService(this.options['name']);
-    this.service.getCharacteristic(EveVoltConsumption).on('get', this.getVolsConsumption.bind(this));
-    this.service.addCharacteristic(EveWattsConsumption).on('get', this.getWattsConsumption.bind(this));
+    this.service.getCharacteristic(EveVoltsConsumption).on('get', this.getVoltsConsumption.bind(this));
     this.service.addCharacteristic(EveAmpsConsumption).on('get', this.getAmpsConsumption.bind(this));
+    this.service.addCharacteristic(EveWattsConsumption).on('get', this.getWattsConsumption.bind(this));
 
     this.client = mqtt.connect(this.url, this.options);
 
@@ -109,14 +109,14 @@ function MqttPowerMeterAccessory(log, config) {
             self.service.getCharacteristic(EveVoltsConsumption).setValue(self.voltsConsumption, undefined, undefined);
         }
 
-        if (topic == self.topics['watts']) {
-            self.wattsConsumption = parseFloat(message.toString());
-            self.service.getCharacteristic(EveWattsConsumption).setValue(self.wattsConsumption, undefined, undefined);
-        }
-
         if (topic == self.topics['amps']) {
             self.ampsConsumption = parseFloat(message.toString());
             self.service.getCharacteristic(EveAmpsConsumption).setValue(self.ampsConsumption, undefined, undefined);
+        }
+
+        if (topic == self.topics['watts']) {
+            self.wattsConsumption = parseFloat(message.toString());
+            self.service.getCharacteristic(EveWattsConsumption).setValue(self.wattsConsumption, undefined, undefined);
         }
     });
 
@@ -129,12 +129,12 @@ MqttPowerMeterAccessory.prototype.getVoltsConsumption = function (callback) {
     callback(null, this.voltsConsumption);
 };
 
-MqttPowerMeterAccessory.prototype.getWattsConsumption = function (callback) {
-    callback(null, this.wattsConsumption);
-};
-
 MqttPowerMeterAccessory.prototype.getAmpsConsumption = function (callback) {
     callback(null, this.ampsConsumption);
+};
+
+MqttPowerMeterAccessory.prototype.getWattsConsumption = function (callback) {
+    callback(null, this.wattsConsumption);
 };
 
 MqttPowerMeterAccessory.prototype.getServices = function () {
