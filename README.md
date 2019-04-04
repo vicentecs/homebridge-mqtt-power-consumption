@@ -18,8 +18,8 @@ Remember to configure the plugin in config.json in your home directory inside th
   "password": "<password>",
   "topics": {
     "volts": "<topic to get the volts power >",
-    "amps": "<topic to get the amps power>",
-    "watts": "<topic to get the watts power>"
+    "watts": "<topic to get the watts power>",
+    "amps": "<topic to get the amps power>"
   }
 }
 ```
